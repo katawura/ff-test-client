@@ -22,7 +22,7 @@ createConnection().then(async connection => {
     app.use("/", routes);
 
     // start express server
-    app.listen(3000, () => {
-			console.log("Server started on port 3000!");
+    app.listen(80, () => {
+			console.log("Server started on port 5000!");
 		});
 }).catch(error => console.log(error));

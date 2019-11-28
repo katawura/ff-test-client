@@ -1,15 +1,17 @@
 import {
-Entity,
+	Entity,
 	PrimaryGeneratedColumn,
 	Column,
 	Unique,
 	CreateDateColumn,
-	UpdateDateColumn
+	UpdateDateColumn,
+	OneToMany
 } from "typeorm";
-import { Length, IsNotEmpty } from "class-validator";
+import { Length } from "class-validator";
 import * as bcrypt from "bcryptjs";
+import { Post } from "../entity/Post";
 
-@Entity()
+@Entity('user')
 @Unique(["username"])
 export class User {
 	@PrimaryGeneratedColumn()
@@ -24,10 +26,6 @@ export class User {
 	password: string;
 
 	@Column()
-	@IsNotEmpty()
-	role: string;
-
-	@Column()
 	@CreateDateColumn()
 	createdAt: Date;
 
@@ -36,10 +34,13 @@ export class User {
 	updatedAt: Date;
 
 	hashPassword() {
-			this.password = bcrypt.hashSync(this.password, 8);
+		this.password = bcrypt.hashSync(this.password, 8);
 	}
 
 	checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
-			return bcrypt.compareSync(unencryptedPassword, this.password);
+		return bcrypt.compareSync(unencryptedPassword, this.password);
 	}
+
+	@OneToMany(type => Post, post => post.user)
+  posts: Post[];
 }
